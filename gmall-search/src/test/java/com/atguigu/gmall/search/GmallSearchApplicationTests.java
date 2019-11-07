@@ -1,9 +1,7 @@
 package com.atguigu.gmall.search;
 
-import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
-import com.atguigu.gmall.pms.api.GmallPmsApi;
 import com.atguigu.gmall.pms.entity.BrandEntity;
 import com.atguigu.gmall.pms.entity.CategoryEntity;
 import com.atguigu.gmall.pms.entity.SkuInfoEntity;
@@ -14,7 +12,9 @@ import com.atguigu.gmall.search.feign.GmallWmsClient;
 import com.atguigu.gmall.search.vo.GoodsVO;
 import com.atguigu.gmall.wms.entity.WareSkuEntity;
 import io.searchbox.client.JestClient;
-import io.searchbox.core.*;
+import io.searchbox.core.Delete;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Index;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 class GmallSearchApplicationTests {
@@ -75,7 +73,7 @@ class GmallSearchApplicationTests {
                     goodsVO.setSort(0);  //综合排序
 
                     //设置品牌相关的
-                    Resp<BrandEntity> brandEntityResp = this.gmallPmsClient.queryBrandById(skuInfoEntity.getBrandId());
+                    Resp<BrandEntity> brandEntityResp              = this.gmallPmsClient.queryBrandById(skuInfoEntity.getBrandId());
                     BrandEntity brandEntity = brandEntityResp.getData();
                     if (brandEntity != null) {
                         goodsVO.setBrandId(skuInfoEntity.getBrandId());

@@ -1,10 +1,15 @@
 spring:
   elasticsearch:
     jest:
-      uris: http://192.168.154.129:9200
+      uris: http://192.168.80.168:9200
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  rabbitmq:
+    host: 192.168.80.168
+    virtual-host: /root
+    username: root
+    password: root
 server:
   port: 8086

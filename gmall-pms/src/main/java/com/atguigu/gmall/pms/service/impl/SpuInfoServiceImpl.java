@@ -1,35 +1,32 @@
 package com.atguigu.gmall.pms.service.impl;
 
+import com.atguigu.core.bean.PageVo;
+import com.atguigu.core.bean.Query;
+import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.gmall.pms.dao.*;
-import com.atguigu.gmall.pms.entity.*;
+import com.atguigu.gmall.pms.entity.SkuImagesEntity;
+import com.atguigu.gmall.pms.entity.SkuInfoEntity;
+import com.atguigu.gmall.pms.entity.SkuSaleAttrValueEntity;
+import com.atguigu.gmall.pms.entity.SpuInfoEntity;
 import com.atguigu.gmall.pms.feign.GmallSmsClient;
 import com.atguigu.gmall.pms.service.SpuInfoDescService;
+import com.atguigu.gmall.pms.service.SpuInfoService;
 import com.atguigu.gmall.pms.vo.ProductAttrValueVO;
 import com.atguigu.gmall.pms.vo.SkuInfoVO;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
 import com.atguigu.gmall.sms.vo.SaleVO;
-
-import io.seata.spring.annotation.GlobalTransactional;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.atguigu.core.bean.PageVo;
-import com.atguigu.core.bean.Query;
-import com.atguigu.core.bean.QueryCondition;
-
-import com.atguigu.gmall.pms.service.SpuInfoService;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.util.*;
 
 
 @Service("spuInfoService")
@@ -52,6 +49,8 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     @Autowired
     private SpuInfoDescService spuInfoDescService;
 
+    @Autowired
+    AmqpTemplate amqpTemplate;
     @Override
     public PageVo queryPage(QueryCondition params) {
         IPage<SpuInfoEntity> page = this.page(
@@ -104,8 +103,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         saveSku(spuInfoVO, spuId);
 
 //        int i = 1 / 0;
+        sendMessage(spuId,"insert");
+    }
 
-
+    private void sendMessage(Long spuId,String type) {
+        Map<String,Object> map =new HashMap<>();
+        map.put("type",type);
+        map.put("spuId",spuId);
+        amqpTemplate.convertAndSend("GMALL-ITEM-EXCHANGE","item."+type,map);
     }
 
     private void saveSku(SpuInfoVO spuInfoVO, Long spuId) {
