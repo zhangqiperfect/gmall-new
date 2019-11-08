@@ -15,6 +15,7 @@ public class GmallCorsConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         //允许的域 不要写* 否则cookie就无法使用
         corsConfiguration.addAllowedOrigin("http://localhost:1000");
+        corsConfiguration.addAllowedOrigin("http://localhost:2000");
         //允许的头信息
         corsConfiguration.addAllowedHeader("*");
         //允许的请求方式
