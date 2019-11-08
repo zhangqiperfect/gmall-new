@@ -20,24 +20,37 @@ import java.util.List;
 @RestController
 @RequestMapping("index")
 public class GmallIndexController {
-     @Autowired
-     private IndexService indexService;
-     @GetMapping("cates")
-     public Resp<List<CategoryEntity>> queryLevel1Categlories(){
-       List<CategoryEntity> categoryEntities=this.indexService.queryLevel1Categlories();
-         System.out.println(categoryEntities);
-         return Resp.ok(categoryEntities);
-     }
+    @Autowired
+    private IndexService indexService;
 
-     @GetMapping("cates/{pid}")
-    public Resp<List<CategoryVo>> queryCategoryVO(@PathVariable("pid")long pid){
-         List<CategoryVo> categoryVos= this.indexService.queryCategoryVO(pid);
-         return Resp.ok(categoryVos);
-     }
-     @GetMapping("testLock")
-    public Resp<Object> testLock(HttpServletRequest request){
+    @GetMapping("cates")
+    public Resp<List<CategoryEntity>> queryLevel1Categlories() {
+        List<CategoryEntity> categoryEntities = this.indexService.queryLevel1Categlories();
+        System.out.println(categoryEntities);
+        return Resp.ok(categoryEntities);
+    }
+
+    @GetMapping("cates/{pid}")
+    public Resp<List<CategoryVo>> queryCategoryVO(@PathVariable("pid") long pid) {
+        List<CategoryVo> categoryVos = this.indexService.queryCategoryVO(pid);
+        return Resp.ok(categoryVos);
+    }
+
+    @GetMapping("testLock")
+    public Resp<Object> testLock(HttpServletRequest request) {
         String msg = this.indexService.testLock();
-         System.out.println(request.getLocalPort());
-         return  Resp.ok(msg);
-     }
+        return Resp.ok(msg);
+    }
+
+    @GetMapping("read")
+    public Resp<Object> testReadLock() {
+        String msg = this.indexService.testReadLock();
+        return Resp.ok(msg);
+    }
+
+    @GetMapping("write")
+    public Resp<Object> testWriteLock() {
+        String msg = this.indexService.testWriteLock();
+        return Resp.ok(msg);
+    }
 }
