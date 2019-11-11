@@ -2,10 +2,12 @@ package com.atguigu.gmall.index.service;
 
 import com.alibaba.fastjson.JSON;
 import com.atguigu.core.bean.Resp;
+import com.atguigu.gmall.index.annotationl.GmallCache;
 import com.atguigu.gmall.index.feign.GmallPmsClient;
 import com.atguigu.gmall.pms.entity.CategoryEntity;
 import com.atguigu.gmall.pms.vo.CategoryVo;
 import org.apache.commons.lang.StringUtils;
+import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
@@ -34,6 +36,8 @@ public class IndexService {
     private RedissonClient redissonClient;
     private static final String KEY_PREFIX = "index:category";
     private static final String KEY_INDEX = "index:ALL";
+    private static final long TIMEOUT = 300l;
+    private static final long RANDOM = 300l;
 
     public List<CategoryEntity> queryLevel1Categlories() {
         String cache = this.redisTemplate.opsForValue().get(KEY_INDEX);
@@ -48,17 +52,18 @@ public class IndexService {
     }
 
 
+    @GmallCache(prefix = KEY_PREFIX,timeout = TIMEOUT,random = RANDOM)
     public List<CategoryVo> queryCategoryVO(long pid) {
-//         1、查询缓存，没有的话直接返回
+/*//         1、查询缓存，没有的话直接返回
         String cache = this.redisTemplate.opsForValue().get(KEY_PREFIX + pid);
         if (StringUtils.isNotBlank(cache)) {
             return JSON.parseArray("cache", CategoryVo.class);
-        }
+        }*/
 //        2、如果缓存中没有，查询数据库
         Resp<List<CategoryVo>> resp = this.gmallPmsClient.queryCategoryWithSub(pid);
         List<CategoryVo> categoryVos = resp.getData();
 //        3、查询完成后，放入缓存
-        this.redisTemplate.opsForValue().set(KEY_PREFIX + pid, JSON.toJSONString(categoryVos));
+//        this.redisTemplate.opsForValue().set(KEY_PREFIX + pid, JSON.toJSONString(categoryVos));
         return resp.getData();
     }
 
@@ -94,6 +99,19 @@ public class IndexService {
 
 //        lock.writeLock().unlock();
         return "数据写入成功" + msg;
+    }
+
+    public String latch() throws InterruptedException {
+        RCountDownLatch lock = this.redissonClient.getCountDownLatch("lock");
+        String num = this.redisTemplate.opsForValue().get("num");
+        lock.trySetCount(5);
+        return "班长关门了";
+    }
+
+    public String out() {
+        RCountDownLatch lock = this.redissonClient.getCountDownLatch("lock");
+        lock.countDown();
+        return "还剩下人";
     }
 /*    public String testLock1() {
         String uuid = UUID.randomUUID().toString();

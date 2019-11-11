@@ -34,7 +34,7 @@ public class GmallIndexController {
     public Resp<List<CategoryVo>> queryCategoryVO(@PathVariable("pid") long pid) {
         List<CategoryVo> categoryVos = this.indexService.queryCategoryVO(pid);
         return Resp.ok(categoryVos);
-    }
+}
 
     @GetMapping("testLock")
     public Resp<Object> testLock(HttpServletRequest request) {
@@ -53,4 +53,17 @@ public class GmallIndexController {
         String msg = this.indexService.testWriteLock();
         return Resp.ok(msg);
     }
+
+    @GetMapping("latch")
+    public Resp<Object> latch() throws InterruptedException {
+        String msg = this.indexService.latch();
+        return Resp.ok(msg);
+    }
+
+    @GetMapping("out")
+    public Resp<Object> out() {
+        String msg = this.indexService.out();
+        return Resp.ok(msg);
+    }
+
 }
