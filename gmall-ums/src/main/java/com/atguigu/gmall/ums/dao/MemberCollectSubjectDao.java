@@ -1,6 +1,6 @@
 package com.atguigu.gmall.ums.dao;
 
-import com.atguigu.gmall.ums.entity.MemberCollectSubjectEntity;
+import com.atguigu.gmall.ums.api.entity.MemberCollectSubjectEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

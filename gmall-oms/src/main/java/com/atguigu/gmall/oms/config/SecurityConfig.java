@@ -12,6 +12,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/**").permitAll();
         //禁用掉csrf
         http.csrf().disable();
-
     }
 }

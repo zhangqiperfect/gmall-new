@@ -4,7 +4,7 @@
 <mapper namespace="com.atguigu.gmall.ums.dao.MemberLevelDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.atguigu.gmall.ums.entity.MemberLevelEntity" id="memberLevelMap">
+    <resultMap type="com.atguigu.gmall.ums.api.entity.MemberLevelEntity" id="memberLevelMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="growthPoint" column="growth_point"/>

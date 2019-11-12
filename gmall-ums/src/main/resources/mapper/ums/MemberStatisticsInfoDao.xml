@@ -4,7 +4,7 @@
 <mapper namespace="com.atguigu.gmall.ums.dao.MemberStatisticsInfoDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.atguigu.gmall.ums.entity.MemberStatisticsInfoEntity" id="memberStatisticsInfoMap">
+    <resultMap type="com.atguigu.gmall.ums.api.entity.MemberStatisticsInfoEntity" id="memberStatisticsInfoMap">
         <result property="id" column="id"/>
         <result property="memberId" column="member_id"/>
         <result property="consumeAmount" column="consume_amount"/>

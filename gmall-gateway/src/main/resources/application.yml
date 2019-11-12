@@ -10,6 +10,8 @@ spring:
           uri: lb://pms-service
           predicates:
             - Path=/pms/**
+          filters:
+            - Auth
         - id: oms-route
           uri: lb://oms-service
           predicates:
@@ -38,6 +40,22 @@ spring:
             - Path=/api/index/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: item-route
+          uri: lb://item-service
+          predicates:
+            - Path=/api/item/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: auth-route
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+auth:
+  jwt:
+    pubKeyPath: D:\\tmp\\rsa.pub
+    cookieName: Gmall_Token

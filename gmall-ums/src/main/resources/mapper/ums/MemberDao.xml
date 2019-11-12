@@ -4,7 +4,7 @@
 <mapper namespace="com.atguigu.gmall.ums.dao.MemberDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.atguigu.gmall.ums.entity.MemberEntity" id="memberMap">
+    <resultMap type="com.atguigu.gmall.ums.api.entity.MemberEntity" id="memberMap">
         <result property="id" column="id"/>
         <result property="levelId" column="level_id"/>
         <result property="username" column="username"/>

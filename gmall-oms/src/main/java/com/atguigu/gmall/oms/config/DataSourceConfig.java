@@ -18,7 +18,6 @@ public class DataSourceConfig {
         HikariDataSource hikariDataSource = new HikariDataSource();
         hikariDataSource.setJdbcUrl(url);
         return  hikariDataSource;
-
     }
 
 

@@ -40,7 +40,7 @@ class GmallSearchApplicationTests {
 
 
     @Test
-    public void importData(){
+    public void importData() {
         Long pageNum = 1L;
         Long pageSize = 100L;
         do {
@@ -50,14 +50,14 @@ class GmallSearchApplicationTests {
             condition.setLimit(pageSize);
             Resp<List<SpuInfoEntity>> listResp = this.gmallPmsClient.querySpuPage(condition);
             //获取当前页的spuInfo数据
-            List<SpuInfoEntity> spuInfoEntities= listResp.getData();
+            List<SpuInfoEntity> spuInfoEntities = listResp.getData();
 
 
             //遍历spu获取spu下的所有sku导入到索引库中
             for (SpuInfoEntity spuInfoEntity : spuInfoEntities) {
                 Resp<List<SkuInfoEntity>> skuResp = this.gmallPmsClient.querySkuBySpuId(spuInfoEntity.getId());
                 List<SkuInfoEntity> skuInfoEntities = skuResp.getData();
-                if(CollectionUtils.isEmpty(skuInfoEntities)){
+                if (CollectionUtils.isEmpty(skuInfoEntities)) {
                     continue;
                 }
                 skuInfoEntities.forEach(skuInfoEntity -> {
@@ -73,7 +73,7 @@ class GmallSearchApplicationTests {
                     goodsVO.setSort(0);  //综合排序
 
                     //设置品牌相关的
-                    Resp<BrandEntity> brandEntityResp              = this.gmallPmsClient.queryBrandById(skuInfoEntity.getBrandId());
+                    Resp<BrandEntity> brandEntityResp = this.gmallPmsClient.queryBrandById(skuInfoEntity.getBrandId());
                     BrandEntity brandEntity = brandEntityResp.getData();
                     if (brandEntity != null) {
                         goodsVO.setBrandId(skuInfoEntity.getBrandId());
@@ -117,30 +117,9 @@ class GmallSearchApplicationTests {
 
             pageSize = Long.valueOf(spuInfoEntities.size());//获取当前页的记录数
             pageNum++;//下一页
-        }while (pageSize == 100); // 循环条件
+        } while (pageSize == 100); // 循环条件
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     @Test
@@ -184,14 +163,6 @@ class GmallSearchApplicationTests {
     }
 
 
-
-
-
-
-
-
-
-
     @Test
     void contextLoads() {
     }
@@ -201,7 +172,7 @@ class GmallSearchApplicationTests {
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class User{
+class User {
     private String name;
     private String password;
     private Integer age;

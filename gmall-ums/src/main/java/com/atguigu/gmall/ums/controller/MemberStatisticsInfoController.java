@@ -1,7 +1,6 @@
 package com.atguigu.gmall.ums.controller;
 
 import java.util.Arrays;
-import java.util.Map;
 
 
 import com.atguigu.core.bean.PageVo;
@@ -13,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.atguigu.gmall.ums.entity.MemberStatisticsInfoEntity;
+import com.atguigu.gmall.ums.api.entity.MemberStatisticsInfoEntity;
 import com.atguigu.gmall.ums.service.MemberStatisticsInfoService;
 
 

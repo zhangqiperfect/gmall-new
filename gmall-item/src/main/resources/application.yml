@@ -6,3 +6,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
+#threadPoll:
+#  corePoolSize: 1000
+#  maximumPoolSize: 5000
+#  keepAliveTime: 2
+#  capacity: 1000

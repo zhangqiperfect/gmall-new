@@ -1,6 +1,6 @@
 package com.atguigu.gmall.ums.dao;
 
-import com.atguigu.gmall.ums.entity.GrowthChangeHistoryEntity;
+import com.atguigu.gmall.ums.api.entity.GrowthChangeHistoryEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

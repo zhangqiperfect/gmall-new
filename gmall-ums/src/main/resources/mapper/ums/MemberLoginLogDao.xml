@@ -4,7 +4,7 @@
 <mapper namespace="com.atguigu.gmall.ums.dao.MemberLoginLogDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.atguigu.gmall.ums.entity.MemberLoginLogEntity" id="memberLoginLogMap">
+    <resultMap type="com.atguigu.gmall.ums.api.entity.MemberLoginLogEntity" id="memberLoginLogMap">
         <result property="id" column="id"/>
         <result property="memberId" column="member_id"/>
         <result property="createTime" column="create_time"/>

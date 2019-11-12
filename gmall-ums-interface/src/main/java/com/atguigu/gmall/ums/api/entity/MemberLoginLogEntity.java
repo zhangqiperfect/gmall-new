@@ -1,4 +1,4 @@
-package com.atguigu.gmall.ums.entity;
+package com.atguigu.gmall.ums.api.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,7 +9,7 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 积分变化历史记录
+ * 会员登录记录
  * 
  * @author qinhan
  * @email 1589125792@qq.com
@@ -17,8 +17,8 @@ import lombok.Data;
  */
 @ApiModel
 @Data
-@TableName("ums_integration_change_history")
-public class IntegrationChangeHistoryEntity implements Serializable {
+@TableName("ums_member_login_log")
+public class MemberLoginLogEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -33,24 +33,24 @@ public class IntegrationChangeHistoryEntity implements Serializable {
 	@ApiModelProperty(name = "memberId",value = "member_id")
 	private Long memberId;
 	/**
-	 * create_time
+	 * 创建时间
 	 */
-	@ApiModelProperty(name = "createTime",value = "create_time")
+	@ApiModelProperty(name = "createTime",value = "创建时间")
 	private Date createTime;
 	/**
-	 * 变化的值
+	 * ip
 	 */
-	@ApiModelProperty(name = "changeCount",value = "变化的值")
-	private Integer changeCount;
+	@ApiModelProperty(name = "ip",value = "ip")
+	private String ip;
 	/**
-	 * 备注
+	 * city
 	 */
-	@ApiModelProperty(name = "note",value = "备注")
-	private String note;
+	@ApiModelProperty(name = "city",value = "city")
+	private String city;
 	/**
-	 * 来源[0->购物；1->管理员修改;2->活动]
+	 * 登录类型[1-web，2-app]
 	 */
-	@ApiModelProperty(name = "sourceTyoe",value = "来源[0->购物；1->管理员修改;2->活动]")
-	private Integer sourceTyoe;
+	@ApiModelProperty(name = "loginType",value = "登录类型[1-web，2-app]")
+	private Integer loginType;
 
 }

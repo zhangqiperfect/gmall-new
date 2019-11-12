@@ -1,4 +1,4 @@
-package com.atguigu.gmall.ums.entity;
+package com.atguigu.gmall.ums.api.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,7 +9,7 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 成长值变化历史记录
+ * 积分变化历史记录
  * 
  * @author qinhan
  * @email 1589125792@qq.com
@@ -17,8 +17,8 @@ import lombok.Data;
  */
 @ApiModel
 @Data
-@TableName("ums_growth_change_history")
-public class GrowthChangeHistoryEntity implements Serializable {
+@TableName("ums_integration_change_history")
+public class IntegrationChangeHistoryEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -38,9 +38,9 @@ public class GrowthChangeHistoryEntity implements Serializable {
 	@ApiModelProperty(name = "createTime",value = "create_time")
 	private Date createTime;
 	/**
-	 * 改变的值（正负计数）
+	 * 变化的值
 	 */
-	@ApiModelProperty(name = "changeCount",value = "改变的值（正负计数）")
+	@ApiModelProperty(name = "changeCount",value = "变化的值")
 	private Integer changeCount;
 	/**
 	 * 备注
@@ -48,9 +48,9 @@ public class GrowthChangeHistoryEntity implements Serializable {
 	@ApiModelProperty(name = "note",value = "备注")
 	private String note;
 	/**
-	 * 积分来源[0-购物，1-管理员修改]
+	 * 来源[0->购物；1->管理员修改;2->活动]
 	 */
-	@ApiModelProperty(name = "sourceType",value = "积分来源[0-购物，1-管理员修改]")
-	private Integer sourceType;
+	@ApiModelProperty(name = "sourceTyoe",value = "来源[0->购物；1->管理员修改;2->活动]")
+	private Integer sourceTyoe;
 
 }

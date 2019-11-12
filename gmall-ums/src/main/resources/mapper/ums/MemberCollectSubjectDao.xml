@@ -4,7 +4,7 @@
 <mapper namespace="com.atguigu.gmall.ums.dao.MemberCollectSubjectDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.atguigu.gmall.ums.entity.MemberCollectSubjectEntity" id="memberCollectSubjectMap">
+    <resultMap type="com.atguigu.gmall.ums.api.entity.MemberCollectSubjectEntity" id="memberCollectSubjectMap">
         <result property="id" column="id"/>
         <result property="subjectId" column="subject_id"/>
         <result property="subjectName" column="subject_name"/>

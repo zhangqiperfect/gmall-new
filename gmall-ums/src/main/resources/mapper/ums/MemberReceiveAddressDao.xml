@@ -4,7 +4,7 @@
 <mapper namespace="com.atguigu.gmall.ums.dao.MemberReceiveAddressDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.atguigu.gmall.ums.entity.MemberReceiveAddressEntity" id="memberReceiveAddressMap">
+    <resultMap type="com.atguigu.gmall.ums.api.entity.MemberReceiveAddressEntity" id="memberReceiveAddressMap">
         <result property="id" column="id"/>
         <result property="memberId" column="member_id"/>
         <result property="name" column="name"/>
