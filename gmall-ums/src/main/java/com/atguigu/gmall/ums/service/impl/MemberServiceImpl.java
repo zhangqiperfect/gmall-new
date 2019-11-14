@@ -3,14 +3,16 @@ package com.atguigu.gmall.ums.service.impl;
 import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.Query;
 import com.atguigu.core.bean.QueryCondition;
-import com.atguigu.gmall.ums.dao.MemberDao;
 import com.atguigu.gmall.ums.api.entity.MemberEntity;
+import com.atguigu.gmall.ums.dao.MemberDao;
 import com.atguigu.gmall.ums.service.MemberService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,6 +21,8 @@ import java.util.UUID;
 
 @Service("memberService")
 public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> implements MemberService {
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public PageVo queryPage(QueryCondition params) {
@@ -52,7 +56,12 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     @Override
     public void register(MemberEntity memberEntity, String code) {
-//        1、校验验证码
+        String phoneNo = memberEntity.getMobile();
+//        1、校验手机号、校验验证码
+        String codeStr = this.redisTemplate.opsForValue().get(phoneNo);
+        if (StringUtils.isEmpty(codeStr) || !codeStr.equals(code)) {
+            throw new IllegalArgumentException("验证码错误");
+        }
 //       加盐加密
         String salt = StringUtils.substring(UUID.randomUUID().toString(), 0, 6);
         memberEntity.setSalt(salt);

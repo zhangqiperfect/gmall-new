@@ -8,3 +8,10 @@ spring:
         server-addr: 127.0.0.1:8848
   redis:
     host: 192.168.80.168
+
+sms:
+  host: http://dingxin.market.alicloudapi.com
+  path: /dx/sendSms
+  method: POST
+  appcode: feadbf248bb443338d3d6db6aa300845
+
