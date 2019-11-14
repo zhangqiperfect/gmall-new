@@ -8,6 +8,7 @@ class GmallGatewayApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

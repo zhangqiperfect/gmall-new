@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 public interface GmallPmsApi {
+    //根据skuId查询销售属性
+    @GetMapping("pms/skusaleattrvalue/sku/{skuId}")
+    public Resp<List<SkuSaleAttrValueEntity>> querySkuAttrBySkuId(@PathVariable("skuId") Long skuId);
     //查询分组信息及值
     @GetMapping("pms/attrgroup/item/group/{cid}/{spuId}")
     public Resp<List<GroupVO>> queryGroupVOByCid(@PathVariable("cid") long cid, @PathVariable("spuId")long spuId);
