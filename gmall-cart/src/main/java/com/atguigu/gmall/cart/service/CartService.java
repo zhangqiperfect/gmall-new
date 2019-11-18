@@ -6,6 +6,7 @@ import com.atguigu.gmall.cart.feign.GmallPmsClient;
 import com.atguigu.gmall.cart.feign.GmallSmsClient;
 import com.atguigu.gmall.cart.interceptor.LoginInterceptor;
 import com.atguigu.gmall.cart.vo.Cart;
+import com.atguigu.gmall.cart.vo.CartItemVo;
 import com.atguigu.gmall.cart.vo.UserInfo;
 import com.atguigu.gmall.pms.entity.SkuInfoEntity;
 import com.atguigu.gmall.pms.entity.SkuSaleAttrValueEntity;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,7 @@ public class CartService {
     @Autowired
     private StringRedisTemplate redisTemplate;
     private static final String KEY_PREFIX = "cart:key:";
+    private static final String CURRENT_PRICE_PREFIX = "cart:price:";
 
     public void addCart(Cart cart) {
         Integer count = cart.getCount();
@@ -58,6 +61,7 @@ public class CartService {
             Resp<List<SkuSaleAttrValueEntity>> listResp1 = this.gmallPmsClient.querySkuAttrBySkuId(cart.getSkuId());
             cart.setSkuAttrValue(listResp1.getData());
             cart.setPrice(skuInfoEntity.getPrice());
+            this.redisTemplate.opsForValue().set(CURRENT_PRICE_PREFIX + skuId, skuInfoEntity.getPrice().toString());
         }
         //            同步到reidis中
         hashOps.put(skuId, JSON.toJSONString(cart));
@@ -72,7 +76,11 @@ public class CartService {
         List<Object> cartJsonList = userKeyOps.values();
         List<Cart> userKeyCarts = null;
         if (!CollectionUtils.isEmpty(cartJsonList)) {
-            userKeyCarts = cartJsonList.stream().map(cartJson -> JSON.parseObject(cartJson.toString(), Cart.class)).collect(Collectors.toList());
+            userKeyCarts = cartJsonList.stream().map(cartJson -> {
+                Cart cart = JSON.parseObject(cartJson.toString(), Cart.class);
+                cart.setCurrentPrice(new BigDecimal(this.redisTemplate.opsForValue().get(CURRENT_PRICE_PREFIX + cart.getSkuId())));
+                return cart;
+            }).collect(Collectors.toList());
         }
 //        判断未登录直接返回
         if (userInfo.getUserId() == null) {
@@ -97,7 +105,14 @@ public class CartService {
         }
 //        未登录购物车为空则查询登录购物车直接返回
         List<Object> userIdJsonList = userIdOps.values();
-        List<Cart> userIdCarts = userIdJsonList.stream().map(userIdJson -> JSON.parseObject(userIdJson.toString(), Cart.class)).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(userIdJsonList)) {
+            return null;
+        }
+        List<Cart> userIdCarts = userIdJsonList.stream().map(userIdJson -> {
+            Cart cart = JSON.parseObject(userIdJson.toString(), Cart.class);
+            cart.setCurrentPrice(new BigDecimal(this.redisTemplate.opsForValue().get(CURRENT_PRICE_PREFIX + cart.getSkuId())));
+            return cart;
+        }).collect(Collectors.toList());
         return userIdCarts;
     }
 
@@ -150,5 +165,30 @@ public class CartService {
                 hashOps.put(cart.getSkuId().toString(), JSON.toJSONString(cart));
             }
         });
+    }
+
+    public List<CartItemVo> queryItemVO(Long userId) {
+
+//        已登录，查询登录的购物车
+        String key2 = KEY_PREFIX + userId;
+        BoundHashOperations<String, Object, Object> userIdOps = this.redisTemplate.boundHashOps(key2);
+
+//        未登录购物车为空则查询登录购物车直接返回
+        List<Object> userIdJsonList = userIdOps.values();
+        if (CollectionUtils.isEmpty(userIdJsonList)) {
+            return null;
+        }
+        //获取所有购物车记录
+        List<CartItemVo> cartItemVos = userIdJsonList.stream().map(userIdJson -> {
+            Cart cart = JSON.parseObject(userIdJson.toString(), Cart.class);
+            cart.setCurrentPrice(new BigDecimal(this.redisTemplate.opsForValue().get(CURRENT_PRICE_PREFIX + cart.getSkuId())));
+            return cart;
+        }).filter(cart -> cart.getCheck()).map(cart -> {
+            CartItemVo cartItemVo = new CartItemVo();
+            cartItemVo.setCount(cart.getCount());
+            cartItemVo.setSkuId(cart.getSkuId());
+            return cartItemVo;
+        }).collect(Collectors.toList());
+        return cartItemVos;
     }
 }

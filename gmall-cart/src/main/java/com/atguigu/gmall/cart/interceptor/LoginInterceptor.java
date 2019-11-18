@@ -60,4 +60,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         //以为使用的是tmocat线程池，请求结束不代表线程结束，线程存在则ThreadLocal对象保存的userInfo中
         threadLocal.remove();
 }
+
 }
+

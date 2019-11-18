@@ -17,6 +17,7 @@
         <module>gmall-wms-interface</module>
         <module>gmall-ums-interface</module>
         <module>gmall-msm-interface</module>
+        <module>gmall-cart-interface</module>
     </modules>
 
 </project>

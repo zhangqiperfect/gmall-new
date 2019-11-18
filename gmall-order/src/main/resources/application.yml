@@ -1,0 +1,19 @@
+server:
+  port: 8092
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  redis:
+    host: 192.168.80.168
+  rabbitmq:
+    host: 192.168.80.168
+    virtual-host: /root
+    username: root
+    password: root
+
+auth:
+  jwt:
+    pubKeyPath: D:\\tmp\\rsa.pub
+    cookieName: Gmall_Token

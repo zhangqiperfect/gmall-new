@@ -22,4 +22,6 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:mapper/ums/*.xml
-
+  global-config:
+    db-config:
+      id-type: auto

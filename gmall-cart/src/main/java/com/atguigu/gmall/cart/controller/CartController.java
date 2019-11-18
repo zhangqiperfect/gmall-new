@@ -3,6 +3,7 @@ package com.atguigu.gmall.cart.controller;
 import com.atguigu.core.bean.Resp;
 import com.atguigu.gmall.cart.service.CartService;
 import com.atguigu.gmall.cart.vo.Cart;
+import com.atguigu.gmall.cart.vo.CartItemVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,12 @@ import java.util.List;
 public class CartController {
     @Autowired
     private CartService cartService;
+    //查询购物车记录
+    @GetMapping("order/{userId}")
+    public Resp<List<CartItemVo>> queryItemVO(@PathVariable("userId")Long userId) {
+        List<CartItemVo> itemVoList = this.cartService.queryItemVO(userId);
+        return Resp.ok(itemVoList);
+    }
 
     @GetMapping
     public Resp<List<Cart>> queryCarts() {
@@ -31,19 +38,22 @@ public class CartController {
 
         return Resp.ok(null);
     }
+
     @PostMapping("update")
     public Resp<Object> updateCart(@RequestBody Cart cart) {
         this.cartService.updateCart(cart);
 
         return Resp.ok(null);
     }
+
     @PostMapping("{skuId}")
-    public Resp<Object> deleteCart(@PathVariable("skuId")long skuId){
-    this.cartService.deleteCart(skuId);
-    return  Resp.ok(null);
+    public Resp<Object> deleteCart(@PathVariable("skuId") long skuId) {
+        this.cartService.deleteCart(skuId);
+        return Resp.ok(null);
     }
+
     @PostMapping("check")
-    public Resp<Object> checkCart(@RequestBody List<Cart>carts){
+    public Resp<Object> checkCart(@RequestBody List<Cart> carts) {
         this.cartService.checkCart(carts);
         return Resp.ok(null);
     }

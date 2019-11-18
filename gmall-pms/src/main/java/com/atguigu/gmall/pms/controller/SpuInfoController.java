@@ -1,24 +1,22 @@
 package com.atguigu.gmall.pms.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-
 import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
+import com.atguigu.gmall.pms.entity.SpuInfoEntity;
+import com.atguigu.gmall.pms.service.SpuInfoService;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.atguigu.gmall.pms.entity.SpuInfoEntity;
-import com.atguigu.gmall.pms.service.SpuInfoService;
-
-
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,7 +32,8 @@ import com.atguigu.gmall.pms.service.SpuInfoService;
 public class SpuInfoController {
     @Autowired
     private SpuInfoService spuInfoService;
-
+    @Autowired
+    private AmqpTemplate amqpTemplate;
     @GetMapping
     public Resp<PageVo> querySpuInfoByKeyPage(@RequestParam(value = "catId",defaultValue = "0")Long catId,QueryCondition condition){
         PageVo pageVo = this.spuInfoService.querySpuInfoByKeyPage(catId,condition);
@@ -102,6 +101,7 @@ public class SpuInfoController {
     @PreAuthorize("hasAuthority('pms:spuinfo:update')")
     public Resp<Object> update(@RequestBody SpuInfoEntity spuInfo){
 		spuInfoService.updateById(spuInfo);
+		this.sendMessage(spuInfo.getId(),"update");
 
         return Resp.ok(null);
     }
@@ -117,5 +117,10 @@ public class SpuInfoController {
 
         return Resp.ok(null);
     }
-
+    private void sendMessage(Long spuId,String type) {
+        Map<String,Object> map =new HashMap<>();
+        map.put("type",type);
+        map.put("spuId",spuId);
+        amqpTemplate.convertAndSend("GMALL-ITEM-EXCHANGE","item."+type,map);
+    }
 }

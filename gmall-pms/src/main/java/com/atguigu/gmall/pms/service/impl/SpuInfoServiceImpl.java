@@ -104,6 +104,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
 //        int i = 1 / 0;
         sendMessage(spuId,"insert");
+
     }
 
     private void sendMessage(Long spuId,String type) {
