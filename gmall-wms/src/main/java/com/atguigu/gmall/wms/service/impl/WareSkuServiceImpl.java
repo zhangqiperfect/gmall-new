@@ -1,5 +1,6 @@
 package com.atguigu.gmall.wms.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.Query;
 import com.atguigu.core.bean.QueryCondition;
@@ -12,7 +13,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -26,6 +29,10 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     private RedissonClient redissonClient;
     @Autowired
     private WareSkuDao wareSkuDao;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public PageVo queryPage(QueryCondition params) {
@@ -53,7 +60,11 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             });
             return "锁定失败:" + erro.stream().map(skuLockVO -> skuLockVO.getSkuId()).collect(Collectors.toList()).toString();
         }
-
+        //保存锁定库存信息到redis中
+        String orderToken = skuLockVOS.get(0).getOrderToken();
+        this.redisTemplate.opsForValue().set("order:stock:"+skuLockVOS.get(0).getOrderToken(), JSON.toJSONString(skuLockVOS));
+//发送延时消息，20分钟解锁库存
+        this.amqpTemplate.convertAndSend("WMS-EXCHANGE", "wms.unlock", orderToken);
         return null;
     }
 
@@ -64,7 +75,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         List<WareSkuEntity> wareSkuEntities = this.wareSkuDao.checkStore(skuLockVO.getSkuId(), skuLockVO.getCount());
         skuLockVO.setLock(false);
         if (!CollectionUtils.isEmpty(wareSkuEntities)) {
-            //       锁库存
+            //锁库存
             if (this.wareSkuDao.lock(wareSkuEntities.get(0).getId(), skuLockVO.getCount()) == 1) {
                 skuLockVO.setLock(true);
                 skuLockVO.setSkuWareId(wareSkuEntities.get(0).getId());
@@ -73,4 +84,12 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 
         lock.unlock();
     }
+
+    //定时任务
+   /* public static void main(String[] args) {
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(3);
+        scheduledExecutorService.schedule(()->{
+            System.out.println("==========="+ LocalDateTime.now());
+        },10, TimeUnit.SECONDS);
+    }*/
 }

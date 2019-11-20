@@ -16,13 +16,6 @@ import java.security.PublicKey;
 @ConfigurationProperties(prefix = "auth.jwt")
 @Data
 public class JwtProperties {
-    /* auth:
-     jwt:
-     pubKeyPath: D:\\tmp\\rsa.pub
-     priKeyPath: D:\\tmp\\rsa.pub
-     secret: zhangqikdkkkkk
-     expire: 30 # 时间单位为分钟
-     cookieName: Gmall_Token*/
     private String pubKeyPath;
     private Integer expire;
     private String cookieName;

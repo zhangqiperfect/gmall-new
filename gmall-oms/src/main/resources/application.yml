@@ -14,5 +14,14 @@ spring:
 
   redis:
     host: 192.168.80.168
+  rabbitmq:
+    host: 192.168.80.168
+    username: root
+    password: root
+    virtual-host: /root
+
 mybatis-plus:
   mapper-locations: classpath:mapper/oms/*.xml
+  global-config:
+    db-config:
+      id-type: auto

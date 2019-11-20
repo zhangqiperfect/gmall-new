@@ -20,7 +20,7 @@ import java.util.UUID;
  * @author ZQ
  * @create 2019-11-13 11:56
  */
-@EnableConfigurationProperties(JwtProperties.class)
+@EnableConfigurationProperties(value = {JwtProperties.class})
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Autowired

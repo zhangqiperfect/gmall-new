@@ -17,6 +17,7 @@ public class CartWebMvcConfigurer implements WebMvcConfigurer {
     private LoginInterceptor loginInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/**");
+        //.excludePathPatterns("/order/pay/success");排除拦截路径
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/order/pay/success");
     }
 }

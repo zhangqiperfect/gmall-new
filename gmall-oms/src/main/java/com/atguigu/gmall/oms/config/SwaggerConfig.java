@@ -14,10 +14,10 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 public class SwaggerConfig {
 
-    @Bean("库存平台")
+    @Bean("订单平台")
     public Docket userApis() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("用户平台")
+                .groupName("订单平台")
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class)) // 所有标了API注解的才在文档中展示
                 .paths(PathSelectors.regex("/oms.*")) // pms下的所有请求
@@ -28,8 +28,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("谷粒商城-用户平台接口文档")
-                .description("提供用户平台的文档")
+                .title("谷粒商城-订单平台接口文档")
+                .description("提供订单平台的文档")
                 .termsOfServiceUrl("http://www.atguigu.com/")
                 .version("1.0")
                 .build();

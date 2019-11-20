@@ -1,22 +1,18 @@
 package com.atguigu.gmall.oms.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-
 import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
+import com.atguigu.gmall.oms.entity.OrderEntity;
+import com.atguigu.gmall.oms.service.OrderService;
+import com.atguigu.gmall.oms.vo.OrderSubmitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.atguigu.gmall.oms.entity.OrderEntity;
-import com.atguigu.gmall.oms.service.OrderService;
-
-
+import java.util.Arrays;
 
 
 /**
@@ -33,6 +29,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @PostMapping
+    public Resp<OrderEntity> createOrder(@RequestBody OrderSubmitVO orderSubmitVO) {
+        OrderEntity orderEntity = this.orderService.createOrder(orderSubmitVO);
+        return Resp.ok(orderEntity);
+    }
     /**
      * 列表
      */
@@ -52,8 +53,8 @@ public class OrderController {
     @ApiOperation("详情查询")
     @GetMapping("/info/{id}")
     @PreAuthorize("hasAuthority('oms:order:info')")
-    public Resp<OrderEntity> info(@PathVariable("id") Long id){
-		OrderEntity order = orderService.getById(id);
+    public Resp<OrderEntity> info(@PathVariable("id") Long id) {
+        OrderEntity order = orderService.getById(id);
 
         return Resp.ok(order);
     }
@@ -64,8 +65,8 @@ public class OrderController {
     @ApiOperation("保存")
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('oms:order:save')")
-    public Resp<Object> save(@RequestBody OrderEntity order){
-		orderService.save(order);
+    public Resp<Object> save(@RequestBody OrderEntity order) {
+        orderService.save(order);
 
         return Resp.ok(null);
     }
@@ -76,8 +77,8 @@ public class OrderController {
     @ApiOperation("修改")
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('oms:order:update')")
-    public Resp<Object> update(@RequestBody OrderEntity order){
-		orderService.updateById(order);
+    public Resp<Object> update(@RequestBody OrderEntity order) {
+        orderService.updateById(order);
 
         return Resp.ok(null);
     }
@@ -88,8 +89,8 @@ public class OrderController {
     @ApiOperation("删除")
     @PostMapping("/delete")
     @PreAuthorize("hasAuthority('oms:order:delete')")
-    public Resp<Object> delete(@RequestBody Long[] ids){
-		orderService.removeByIds(Arrays.asList(ids));
+    public Resp<Object> delete(@RequestBody Long[] ids) {
+        orderService.removeByIds(Arrays.asList(ids));
 
         return Resp.ok(null);
     }

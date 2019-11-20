@@ -12,5 +12,5 @@ public class SkuLockVO {
     private Integer count;
     private Boolean lock;//锁定成功即为true
     private Long skuWareId;//锁定库存的id
-
+    private String orderToken;//订单号
 }

@@ -1,4 +1,5 @@
-package com.atguigu.gmall.order.vo;
+package com.atguigu.gmall.oms.vo;
+
 
 import com.atguigu.gmall.ums.api.entity.MemberReceiveAddressEntity;
 import lombok.Data;
@@ -11,7 +12,11 @@ import java.util.List;
  * @create 2019-11-17 20:01
  */
 @Data
-public class orderSubmitVO {
+public class OrderSubmitVO {
+//    用户名
+    private String userName;
+//    用户id
+    private Long id;
 //    收货地址
     private MemberReceiveAddressEntity addressEntity;
 //    支付方式

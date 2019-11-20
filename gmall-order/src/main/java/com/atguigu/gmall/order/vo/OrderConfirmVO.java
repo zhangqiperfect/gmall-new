@@ -1,5 +1,6 @@
 package com.atguigu.gmall.order.vo;
 
+import com.atguigu.gmall.oms.vo.OrderItemVO;
 import com.atguigu.gmall.ums.api.entity.MemberReceiveAddressEntity;
 import lombok.Data;
 
