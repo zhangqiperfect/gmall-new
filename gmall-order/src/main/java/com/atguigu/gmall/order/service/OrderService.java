@@ -189,4 +189,8 @@ public class OrderService implements HandlerInterceptor {
     public void paySuccess(String out_trade_no) {
         this.amqpTemplate.convertAndSend("GMALL-ORDER-EXCHANGE","order.pay",out_trade_no);
     }
+
+    public OrderEntity queryOrder() {
+        return null;
+    }
 }
